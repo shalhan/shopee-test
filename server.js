@@ -1,8 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const db = require('./tools/database')
+
 const app = express()
-const port = 3000
+const port = 8080
 
-app.get('/', (req, res) => res.send('Hello World!'))
+var router = require('./routes/routers')
+//API CONFIG
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({limit: '10mb'}));
+//INIT ROUTER
+router.init(app)
+//LISTENING TO PORT
+app.listen(port)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+console.log("Server listening on port " + port)
+
