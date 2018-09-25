@@ -9,26 +9,28 @@ exports.get = function(req, res, next) {
             res.send(response)
         })
         .catch(err => {
-            var response = helpers.getResponse(0, 500, "Failed")
+            var response = helpers.getResponse(0, 500, "Server error")
             res.send(err)
         })
 }
 
 exports.create = function(req, res, next) {
     var data = req.body
-    if(isCreateDataValid(data)){
+    let isValid = isCreateDataValid(data) 
+    console.log(isValid)
+    if(isValid.code == 1){
         trackController.createTrack(data)
             .then(result=> {
-                var response = helpers.getResponse(result.code, 200, result.msg)
+                var response = helpers.getResponse(result.code, 201, result.msg)
                 res.send(response)
             })
             .catch(err => {
-                var response = helpers.getResponse(0, 500, "Failed")
+                var response = helpers.getResponse(0, 500, "Server error")
                 res.send(response)
             })
     }   
     else {
-        var response = helpers.getResponse(0, 400, "Missing fields")
+        var response = helpers.getResponse(0, 400, isValid.msg)
         res.send(response)
     }
 }
@@ -50,7 +52,24 @@ exports.delete = function(req, res, next) {
 
 // validation when create currency exchange rate
 function isCreateDataValid(data) {
+    var res = {}
     if(!data.from_c  || !data.to_c)
-        return false
-    return true
+        res = {
+            code: 0,
+            msg: "Missing fields"
+        }
+    else if(data.from_c.length > 5 || 
+            data.to_c.length > 5 || 
+            typeof data.from_c !== 'string' ||
+            typeof data.to_c !== 'string')
+        res = {
+            code: 0,
+            msg: "Invalid fields"
+        }
+    else
+        res = {
+            code: 1,
+            msg: "Success"
+        }
+    return res
 }
