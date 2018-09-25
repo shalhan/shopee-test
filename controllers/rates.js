@@ -1,10 +1,9 @@
 const rateModel = require("../models/rates")
 const helpers = require("../helpers/response")
 
-const LAST_SEVEN_DAY = 7 * 24 * 60 * 60 * 1000
-
 //GLOBAL FUNCTION
 
+//POST /rates
 exports.createRate = function(data) {
     return new Promise(function(resolve,reject) {
         //Validation
@@ -30,18 +29,20 @@ exports.createRate = function(data) {
     });
 }
 
-exports.getRates = function(onDate) {
+//GET /rates?date=
+exports.getRatesOnDate = function(onDate) {
     return new Promise(async (resolve,reject) => {
         //no query on date
         if(typeof onDate === 'undefined'){
-            resolve("GAK PAKE PARAMETER")
+            var response = helpers.getResponse(0, 400, "Missing query")
+            reject(response)
         }
         //with query on date
         else{ 
-            var arr = [getLast7Days(onDate)]
             try{
-                var last7DaysRate = await rateModel.getLast7DaysRate(arr)
-                var response = helpers.getResponse(1, 201, "Success", last7DaysRate)
+                var rateData = await rateModel.getLast7DaysRate([null,null],onDate)
+                var averageRate = await rateModel.getAverageRate(rateData,onDate)
+                var response = helpers.getResponse(1, 200, "Success", averageRate)
                 resolve(response)
             }
             catch(e)
@@ -52,17 +53,48 @@ exports.getRates = function(onDate) {
     })
 } 
 
+//GET /rates/recent?from=&to=
+exports.getTrendData = function(queryFrom, queryTo) {
+    return new Promise(async (resolve,reject) => {
+        //query exist
+        if(isGetTrendDataValid(queryFrom,queryTo)) {
+            try {
+                var queries = [queryFrom, queryTo]
+                var latestDate = await rateModel.getLatestDate(queries)
+                if(latestDate[0] == null) {
+                    var response = helpers.getResponse(0, 400, "Invalid queries, data not found")
+                    reject(response)
+                }
+                else {
+                    var rateData = await rateModel.getLast7DaysRate(queries, latestDate[0].date_at)
+                    var trendData = await rateModel.getExchangeRateTrend(rateData)
+                    var response = helpers.getResponse(1, 200, "Success", trendData)
+                }
+                
+                resolve(response)
+            }
+            catch(e) {
+                reject(e)
+            }
+        }
+        else {
+            var response = helpers.getResponse(0, 400, "Missing query")
+            reject(response)
+        }
+    })
+}
 
 // LOCAL FUNCTION
+//validation when create currency exchange rate
 function isCreateDataValid(data) {
     if(!data.from_c  || !data.to_c || !data.rate || !data.created_at)
-        return false;
-    return true;
+        return false
+    return true
 }
 
-function getLast7Days(onDate) {
-    var dateTime = new Date(onDate).getTime()
-    var last7DateTime = new Date(dateTime - LAST_SEVEN_DAY)
-    return last7DateTime.getFullYear() + "-" + last7DateTime.getMonth() + "-" + last7DateTime.getDate()
+//validation when request /rates/recent?from=&to=
+function isGetTrendDataValid(queryFrom, queryTo) {
+    if(!queryFrom || !queryTo)
+        return false
+    return true
 }
-

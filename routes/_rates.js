@@ -2,7 +2,8 @@ const rateController = require("../controllers/rates")
 
 exports.get = function(req, res, next) {
     var onDate = req.query.date
-    rateController.getRates(onDate)
+
+    rateController.getRatesOnDate(onDate)
         .then(response => {
             res.send(response)
         })
@@ -29,4 +30,16 @@ exports.edit = function(req, res, next) {
 
 exports.delete = function(req, res, next) {
     
+}
+
+exports.getTrend = function(req, res, next) {
+    var queryFrom =req.query.from
+    var queryTo = req.query.to
+    rateController.getTrendData(queryFrom, queryTo)
+        .then(response => {
+            res.send(response)
+        })
+        .catch(err => {
+            res.send(err)
+        })
 }

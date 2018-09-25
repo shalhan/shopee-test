@@ -14,13 +14,27 @@ exports.connectDB = function() {
 
 exports.executeQuery = function(query, pool, values) {
     return new Promise(function(resolve,reject) {
-        console.log("EXECUTE : " + query)
-        pool.query(query,values)
-            .then( res => {
-                resolve(res.rows)
-            })
-            .catch(e => {
-                reject(e)
-            })
+        // console.log("EXECUTE : " + query)
+        // pool.query(query,values)
+        //     .then( res => {
+        //         resolve(res.rows)
+        //     })
+        //     .catch(e => {
+        //         reject(e)
+        //     })
+        pool.connect()
+            .then(client => {
+                    return client.query(query, values)
+                    .then(res => {
+                        client.release()
+                        console.log(res.rows)
+                        resolve(res.rows)
+                    })
+                    .catch(e => {
+                        client.release()
+                        console.log(err.stack)
+                        reject(e)
+                    })
+                })
     })
 }
