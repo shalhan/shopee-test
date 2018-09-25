@@ -10,41 +10,18 @@ exports.get = function() {
     })
 }
 
+//processing POST /rates
 //create currency exchange rate
 exports.createRate = function(data) {
     return new Promise(function(resolve,reject) {
         var query = "insert into rates(from_c, to_c, rate, created_at, updated_at) values ($1, $2, $3, $4, now());"
-
         database.executeQuery(query, pool, data)
-            .then(res=> {
-                resolve(res)
+            .then(response=> {
+                resolve(response)
             })
             .catch(err => {
                 reject(err)
             })
-    })
-}
-
-//get last 7 days rate
-//return
-//[from_c,to_c,rate,avg_rate,created_at,latest_date, max_rate,min_rate]
-//latest_date = onDate if set; else latest_date = latest created_at for every currency
-//avg_rate is value where data latest_date - created_at = interval 7 days 
-exports.getLast7DaysRate = function(queryArr = [null,null], onDate = null) {
-    return new Promise(async(resolve,reject) => {
-        try{
-            var query = getLast7DaysOnDateQuery(queryArr,onDate)
-            
-            if(queryArr[0] == null || queryArr[1] == null)
-                var rateArr =  await database.executeQuery(query, pool)
-            else
-                var rateArr =  await database.executeQuery(query, pool, queryArr)
-
-            resolve(rateArr)
-        }
-        catch(e) {
-            reject(e)
-        }
     })
 }
 
@@ -73,6 +50,26 @@ exports.getAverageRate = function(rateArr, onDate) {
             resolve(resultData)
         }
         catch(e){
+            reject(e)
+        }
+    })
+}
+
+//get last 7 days rate from selected date
+//return
+exports.getLast7DaysRate = function(queryArr = [null,null], onDate = null) {
+    return new Promise(async(resolve,reject) => {
+        try{
+            var query = getLast7DaysOnDateQuery(queryArr,onDate)
+            
+            if(queryArr[0] == null || queryArr[1] == null)
+                var rateArr =  await database.executeQuery(query, pool)
+            else
+                var rateArr =  await database.executeQuery(query, pool, queryArr)
+
+            resolve(rateArr)
+        }
+        catch(e) {
             reject(e)
         }
     })
@@ -162,7 +159,7 @@ function getDataAverage(rateArr) {
 
                         if(obj.date[key] == 0)
                         {
-                            obj.average_rate = "Insufficient data"
+                            obj.avg_rate = "Insufficient data"
                             obj.rate = null
                             delete obj.total_rate
                             delete obj.count
