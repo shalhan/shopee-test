@@ -18,7 +18,7 @@ if you want to use this app follow these instructions below
 
 System will be running in port :8080
 ### PostgreSQL Config
-Copy past file **config.json.example** into root directory then fill all attributes
+Copy past file **config.json.example** into root directory then fill all the attributes
 
 ### Database Structure
 This API have 2 tables which are **rates** table and **tracks** table. **rates** table is used to manage currency exchange rate and **tracks** table is used to tracking currency rate

@@ -25,12 +25,13 @@ exports.createTrack = function(data) {
                         .then(result => {
                             res = {
                                 code: 1,
-                                msg: "Success"
+                                msg: "Success",
+                                data: result
                             }
                             resolve(res)
                         })
                         .catch(err => {
-
+                            reject(err)
                         })
                 }
                 catch(e) {
@@ -40,14 +41,19 @@ exports.createTrack = function(data) {
             else {
                 res = {
                     code: 1,
-                    msg: "Already exist"
+                    msg: "Already exist",
+                    data: []
                 }
                 resolve(res)
             }
 
         }
         else {
-
+            res = {
+                code: 0,
+                msg: "Currency not exist in rates table",
+            }
+            reject(res)
         }
     });
 }

@@ -17,15 +17,17 @@ exports.get = function(req, res, next) {
 exports.create = function(req, res, next) {
     var data = req.body
     let isValid = isCreateDataValid(data) 
-    console.log(isValid)
     if(isValid.code == 1){
         trackController.createTrack(data)
             .then(result=> {
-                var response = helpers.getResponse(result.code, 201, result.msg)
+                var response = helpers.getResponse(result.code, 201, result.msg, result.data)
                 res.send(response)
             })
             .catch(err => {
-                var response = helpers.getResponse(0, 500, "Server error")
+                if(err.msg)
+                    var response = helpers.getResponse(0, 500, err.msg)
+                else
+                    var response = helpers.getResponse(0, 500, "Server error")
                 res.send(response)
             })
     }   

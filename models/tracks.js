@@ -17,7 +17,7 @@ exports.getTracks = function(data) {
 
 exports.createTrack = function(data) {
     return new Promise(async(resolve,reject) => {
-        var query = "insert into tracks(from_c, to_c, created_at, updated_at) values ($1, $2, now(), now());"
+        var query = "insert into tracks(from_c, to_c, created_at, updated_at) values ($1, $2, now(), now()) RETURNING *;"
         database.executeQuery(query, pool, data)
             .then(result=> {
                 resolve(result)

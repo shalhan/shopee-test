@@ -35,10 +35,11 @@ exports.get = function(req, res, next) {
 exports.create = function(req, res, next) {
     var data = req.body
     var isValid = isCreateDataValid(data) 
+    console.log(typeof data.rate)
     if(isValid.code == 1){
         rateController.createRate(data)
             .then(result => {
-                var response = helpers.getResponse(1, 201, "Success")
+                var response = helpers.getResponse(1, 201, "Success", result)
                 res.send(response)
             })
             .catch(err => {
@@ -50,12 +51,6 @@ exports.create = function(req, res, next) {
         var response = helpers.getResponse(0, 400, isValid.message)
         res.send(response)
     }
-}
-
-exports.edit = function(req, res, next) {
-}
-
-exports.delete = function(req, res, next) {
 }
 
 exports.getTrend = function(req, res, next) {
@@ -101,17 +96,12 @@ function isAllQueryExist(queries) {
 // validation when create currency exchange rate
 function isCreateDataValid(data) {
     let res = {}
-    if(!data.from_c  || !data.to_c || !data.rate || !data.created_at)
+    if( !data.from_c  || !data.to_c || !data.rate || !data.created_at )
         res = {
             code: 0,
             message: "Missing field!"
         }
-    else if(data.from_c.length > 5 || 
-            data.to_c.length > 5 || 
-            typeof data.from_c !== 'string' |
-            typeof data.to_c !== 'string' |
-            typeof data.rate !== 'number' || 
-            !isDateValid(data.created_at))
+    else if( data.from_c.length > 5 || data.to_c.length > 5 || !isDateValid(data.created_at) )
         res = {
             code: 0,
             message: "Invalid field!"

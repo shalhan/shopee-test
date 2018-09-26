@@ -4,7 +4,6 @@ exports.getResponse = function(code, status, title, data)
     //code 0 = failed
     if(code === 1)
     {
-        console.log(data)
         return {
             status: status,
             title: title,
