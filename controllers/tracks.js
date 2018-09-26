@@ -44,7 +44,7 @@ exports.createTrack = function(data) {
                     msg: "Already exist",
                     data: []
                 }
-                resolve(res)
+                reject(res)
             }
 
         }

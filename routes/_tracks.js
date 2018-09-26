@@ -10,6 +10,7 @@ exports.get = function(req, res, next) {
         })
         .catch(err => {
             var response = helpers.getResponse(0, 500, "Server error")
+            res.statusCode = 400
             res.send(err)
         })
 }
@@ -28,11 +29,13 @@ exports.create = function(req, res, next) {
                     var response = helpers.getResponse(0, 500, err.msg)
                 else
                     var response = helpers.getResponse(0, 500, "Server error")
+                res.statusCode = 400
                 res.send(response)
             })
     }   
     else {
         var response = helpers.getResponse(0, 400, isValid.msg)
+        res.statusCode = 400
         res.send(response)
     }
 }
@@ -46,6 +49,7 @@ exports.delete = function(req, res, next) {
         })
         .catch(err => {
             var response = helpers.getResponse(0, 500, "Failed")
+            res.statusCode = 400
             res.send(response)
         })
 }

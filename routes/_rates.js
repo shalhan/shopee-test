@@ -3,15 +3,13 @@ const helpers = require("../helpers/response")
 
 exports.get = function(req, res, next) {
     var onDate = req.query.date
-    //is date format?
-    
-    if(isDateValid(onDate))
-    {
-        if(isAllQueryExist([onDate])) {
+    if(isQueryExist([onDate])) {
+        if(isDateValid(onDate))
+        {
             rateController.getRatesOnDate(onDate)
                 .then(result => {
                     var response = helpers.getResponse(1, 201, "Success", result)
-    
+
                     res.send(response)
                 })
                 .catch(err=> {
@@ -20,22 +18,20 @@ exports.get = function(req, res, next) {
                 });
         }
         else {
-            var response = helpers.getResponse(0, 400, "Missing query")
+            var response = helpers.getResponse(0, 400, "Data must be date format 'YYYY-MM-DD'")
+            res.statusCode = 400
             res.send(response)
         }
-    }
-    else {
-        var response = helpers.getResponse(0, 400, "Data must be date format 'YYYY-MM-DD'")
+    }else {
+        var response = helpers.getResponse(0, 400, "Missing query")
+        res.statusCode = 400
         res.send(response)
     }
-
-    
 }
 
 exports.create = function(req, res, next) {
     var data = req.body
     var isValid = isCreateDataValid(data) 
-    console.log(typeof data.rate)
     if(isValid.code == 1){
         rateController.createRate(data)
             .then(result => {
@@ -49,6 +45,7 @@ exports.create = function(req, res, next) {
     }
     else {
         var response = helpers.getResponse(0, 400, isValid.message)
+        res.statusCode = 400
         res.send(response)
     }
 }
@@ -57,10 +54,9 @@ exports.getTrend = function(req, res, next) {
     var queryFrom =req.query.from
     var queryTo = req.query.to
 
-    if(isAllQueryExist([queryFrom,queryTo])){
+    if(isQueryExist([queryFrom,queryTo])){
         rateController.getTrendData(queryFrom, queryTo)
             .then(result => {
-                console.log(result)
                 if(result.length == 0)
                     var response = helpers.getResponse(1, 201, "Empty data", result)
                 else
@@ -74,6 +70,7 @@ exports.getTrend = function(req, res, next) {
     }
     else {
         var response = helpers.getResponse(0, 400, "Query missing")
+        res.statusCode = 400
         res.send(response)
     }
 }
@@ -82,7 +79,7 @@ exports.getTrend = function(req, res, next) {
 // LOCAL FUNCTION
 
 // validation when request /rates/recent?from=&to=
-function isAllQueryExist(queries) {
+function isQueryExist(queries) {
     let length = queries.length
     for(let i = 0; i<=length; i++)
     {   
