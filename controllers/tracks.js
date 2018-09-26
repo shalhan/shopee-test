@@ -14,14 +14,14 @@ exports.getTracks = function() {
 
 exports.createTrack = function(data) {
     return new Promise(async(resolve,reject) => {
-        var isCurrencyExist = await trackModel.isCurrencyExist([data.from_c,data.to_c])
+        var isCurrencyExist = await trackModel.isCurrencyExist([data.from_c.toUpperCase(),data.to_c.toUpperCase()])
         if(isCurrencyExist)
         {
-            var isTrackingExist = await trackModel.isTrackingExist([data.from_c,data.to_c])
+            var isTrackingExist = await trackModel.isTrackingExist([data.from_c.toUpperCase(),data.to_c.toUpperCase()])
             if(!isTrackingExist)
             {
                 try {
-                    trackModel.createTrack([data.from_c,data.to_c])
+                    trackModel.createTrack([data.from_c.toUpperCase(),data.to_c.toUpperCase()])
                         .then(result => {
                             res = {
                                 code: 1,

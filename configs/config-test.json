@@ -1,0 +1,9 @@
+{
+    "db" : {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "shopee-dev",
+        "password": "terserah",
+        "port": 5432
+    }
+}

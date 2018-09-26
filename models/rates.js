@@ -27,7 +27,7 @@ exports.getRateOnInterval = function(onDate = null, interval, queryArr = [null,n
                 var rateArr =  await database.executeQuery(query, pool)
             else
                 var rateArr =  await database.executeQuery(query, pool, queryArr)
-
+            console.log(rateArr)
             resolve(rateArr)
         }
         catch(e) {

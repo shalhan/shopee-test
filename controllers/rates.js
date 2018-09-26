@@ -7,7 +7,7 @@ const helpers = require("../helpers/helpers")
 exports.createRate = function(data) {
     return new Promise(function(resolve,reject) {
         //move data to array to using parameterized query
-        var arr = [data.from_c, data.to_c, data.rate, data.created_at]
+        var arr = [data.from_c.toUpperCase(), data.to_c.toUpperCase(), data.rate, data.created_at]
         //send data to db
         rateModel.createRate(arr)
             .then(result=> {

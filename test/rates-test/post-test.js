@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 const { Pool, Client } = require('pg')
 
 let chai = require('chai')

@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 const database = require("../../tools/database.js")
 const pool = database.connectDB()
 

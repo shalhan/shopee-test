@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 const { Pool, Client } = require('pg')
 
 //Require the dev-dependencies
@@ -10,7 +12,7 @@ let expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('/GET rates', () => {
-    it('it should GET last average rates in last 7 days', (done) => {
+    it('it should GET last average rates in last 7 days if data not null', (done) => {
         chai.request(server)
             .get('/rates')
             .query({date: '2017-09-24'})
@@ -41,7 +43,7 @@ describe('/GET rates', () => {
                 done()
             })
     })
-    it('it should get trend rate', (done) => {
+    it('it should get trend rate if data not null', (done) => {
         chai.request(server)
             .get('/rates/trend')
             .query({from: 'USD', to: 'GBP'})
