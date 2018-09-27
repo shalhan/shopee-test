@@ -9,7 +9,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: "postgresql://postgres@db:5432/shopee-test"
+      DATABASE_URL: "postgresql://postgres:12345678@db:5432/shopee-test"
   db:
     image: postgres:9.6.2-alpine
     environment:
