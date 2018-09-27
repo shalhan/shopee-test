@@ -74,7 +74,7 @@ NOTE : Follow all the attribute name, attribute data type, and table name to run
 
 ##### Response Example
 ```
-{{
+{
     "status": 201,
     "title": "Success",
     "data": [
