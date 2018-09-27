@@ -21,13 +21,13 @@ exports.createRate = function(data) {
 exports.getRateOnInterval = function(onDate = null, interval, queryArr = [null,null]) {
     return new Promise(async(resolve,reject) => {
         try{
+            // var query = rateDataOnIntervalQuery(queryArr,onDate, interval)
             var query = rateDataOnIntervalQuery(queryArr,onDate, interval)
             
             if(queryArr[0] == null || queryArr[1] == null)
                 var rateArr =  await database.executeQuery(query, pool)
             else
                 var rateArr =  await database.executeQuery(query, pool, queryArr)
-            console.log(rateArr)
             resolve(rateArr)
         }
         catch(e) {
@@ -58,24 +58,5 @@ var rateDataOnIntervalQuery = function(queries,onDate, interval) {
     else
         whereQuery = ""
 
-    return "with exchange as ( "+
-            "select from_c,to_c,rate,created_at "+
-            "from "+
-                "rates b "+
-            "order "+
-                "by created_at "+
-        ") "+
-        "select  "+
-            "from_c, "+
-            "to_c, "+
-            "rate, "+
-            "to_char(created_at, 'YYYY-MM-DD') as date_at "+
-        "from "+
-            "exchange "+
-        "where '"+
-            onDate +"' - created_at <" + interval + " and '"+
-            onDate +"' - created_at >= 0 "+
-            whereQuery +
-        "order by "+
-            "created_at desc "
+    return "select id,from_c,to_c,rate,created_at, to_char(created_at, 'YYYY-MM-DD') as date_at from rates where created_at <= '" + onDate + "' and created_at > date '" + onDate + "' - integer '" + interval + "' " + whereQuery + " order by created_at desc"
 }

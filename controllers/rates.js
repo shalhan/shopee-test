@@ -64,7 +64,8 @@ function getAverageRate(rateArr, onDate, interval) {
        try{
            var countedData = await countDataAverage(rateArr, onDate, interval)
            var resultData = await getDataAverage(countedData)
-           resolve(resultData)
+           var sortedData = await helpers.sortBy(resultData, "avg_rate") //desc
+           resolve(sortedData)
        }
        catch(e){
            reject(e)
