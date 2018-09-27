@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg')
-const config = process.env.NODE_ENV == 'test' ?  require("../configs/config-test.json") : require("../configs/config.json")
+const config = require("../configs/config.json")
+// const config = process.env.NODE_ENV == 'test' ?  require("../configs/config-test.json") : require("../configs/config.json")
 
 exports.connectDB = function() {
     const pool = new Pool({

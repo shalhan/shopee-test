@@ -12,7 +12,7 @@ let assert = require('assert')
 chai.use(chaiHttp);
 
 describe('/POST rates', () => {
-    it('should be success', (done) => {
+    it('should create rate data', (done) => {
         let rate = {
             from_c: "IDR",
             to_c: "SGP",

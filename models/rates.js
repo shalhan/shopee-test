@@ -35,12 +35,11 @@ exports.getRateOnInterval = function(onDate = null, interval, queryArr = [null,n
         }
     })
 }
-
 //return latest created_at for selected "from" and "to" 
-exports.getLatestDate = function(queryArr) {
+exports.getLatestByCurrency = function(queryArr) {
     return new Promise(async(resolve, reject) => {
         try{
-            var query = "select created_at, to_char(created_at, 'YYYY-MM-DD') as date_at from rates where from_c = $1 and to_c = $2 order by created_at desc limit 1"
+            var query = "select id, from_c, to_c, rate, created_at, to_char(created_at, 'YYYY-MM-DD') as date_at from rates where from_c = $1 and to_c = $2 order by created_at desc limit 1"
             var rateArr =  await database.executeQuery(query, pool, queryArr)
             resolve(rateArr)
         }

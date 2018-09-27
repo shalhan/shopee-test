@@ -1,0 +1,12 @@
+// Here is where you set your 
+// postgresql env for testing
+
+{
+    "db" : {
+        "user": "YOUR_USER",
+        "host": "YOUR_HOST",
+        "database": "YOUR_DB",
+        "password": "YOUR_PASSWORD",
+        "port": 5432 //default port
+    }
+}

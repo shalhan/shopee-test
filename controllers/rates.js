@@ -39,7 +39,7 @@ exports.getTrendData = function(queryFrom, queryTo) {
     return new Promise(async (resolve,reject) => {
         try {
             var queries = [queryFrom, queryTo]
-            var latestDate = await rateModel.getLatestDate(queries)
+            var latestDate = await rateModel.getLatestByCurrency(queries)
             if(latestDate[0] == null) 
                 resolve(latestDate)
             else {

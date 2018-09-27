@@ -1,5 +1,5 @@
 # Currency Rate Management System
-an API based on Node.js and MySQL to manage your own currency rate data (not for public use)
+an API based on Node.js and PostgreSQL to manage your own currency rate data (not for public use)
 
 ## Getting Started
 
@@ -15,13 +15,13 @@ if you want to use this app follow these instructions below
 
     $ npm start
 ```
-
 System will be running in port :8080
+
 ### PostgreSQL Config
-Copy past file **config.json.example** into root directory then fill all the attributes
+To set your PostgreSQL env, copy and paste file **configs/config.json.example** into configs folder then rename it to be **config.json**. Just do the same for **config-test.json** (it's db config for testing)
 
 ### Database Structure
-This API have 2 tables which are **rates** table and **tracks** table. **rates** table is used to manage currency exchange rate and **tracks** table is used to tracking currency rate
+This API have 2 tables which are **rates** table and **tracks** table. **rates** table is used to manage currency exchange rate and **tracks** table is used to save currency that want to be tracked
 
 #### rates
 | Attribute        |  |
@@ -44,11 +44,11 @@ This API have 2 tables which are **rates** table and **tracks** table. **rates**
 
 NOTE : Follow all the attribute name, attribute data type, and table name to running this app
 &nbsp;
-&nbsp;
 
 &nbsp;
 
 &nbsp;
+
 
 ## API Calls
 
@@ -74,24 +74,10 @@ NOTE : Follow all the attribute name, attribute data type, and table name to run
 
 ##### Response Example
 ```
-{
+{{
     "status": 201,
     "title": "Success",
     "data": [
-        {
-            "from_c": "JPY",
-            "to_c": "IDR",
-            "rate": null,
-            "created_at": "2017-09-24",
-            "avg_rate": "Insufficient data"
-        },
-        {
-            "from_c": "USD",
-            "to_c": "GBP",
-            "rate": 2,
-            "created_at": "2017-09-24",
-            "avg_rate": 1.5857142857142856
-        },
         {
             "from_c": "GBP",
             "to_c": "USD",
@@ -101,15 +87,29 @@ NOTE : Follow all the attribute name, attribute data type, and table name to run
         },
         {
             "from_c": "USD",
+            "to_c": "GBP",
+            "rate": 2,
+            "created_at": "2017-09-24",
+            "avg_rate": 1.5857142857142856
+        },
+        {
+            "from_c": "JPY",
             "to_c": "IDR",
-            "rate": null,
+            "rate": "Insufficient data",
+            "created_at": "2017-09-24",
+            "avg_rate": null
+        },
+        {
+            "from_c": "USD",
+            "to_c": "IDR",
+            "rate": "Insufficient data",
             "created_at": "2017-09-23",
-            "avg_rate": "Insufficient data"
+            "avg_rate": null
         }
     ]
 }
 ```
-NOTE : avg_rate have value *'insufficient data'* and rate have value *null* when there is a missing data between selected date to its last-7-days-data
+NOTE : *rate* have value *'insufficient data'* and *avg_rate* have value *null* when there is a missing data between selected date to its last-7-days-data
 
 #### GET    / rates / trend ? from = currency1 & to = currency2
 
@@ -125,8 +125,8 @@ NOTE : avg_rate have value *'insufficient data'* and rate have value *null* when
     "status": 200,
     "title": "Success",
     "data": {
-        "from_c": "USD",
-        "to_c": "GBP",
+        "from_c": "USD", //currency1
+        "to_c": "GBP", //currency2
         "var_rate": 2.9,
         "avg_rate": 1.5857142857142856,
         "last_7_days": [
@@ -168,12 +168,12 @@ NOTE : avg_rate have value *'insufficient data'* and rate have value *null* when
 ##### Notes
 
 ```
-    Insert currency exchange rate data 
+    Insert currency rate data 
 ```
 
 ##### Request Example
 ```
-=/ x-www-form-urlencoded
+ x-www-form-urlencoded
 
 {
     from_c : "IDR",
